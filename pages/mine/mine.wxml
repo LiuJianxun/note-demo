@@ -1,0 +1,77 @@
+<!--pages/mine/mine.wxml-->
+<view class="container">
+  <!-- 顶部用户信息 -->
+  <view class="user-card card">
+    <view class="user-avatar">👤</view>
+    <view class="user-name">记账用户</view>
+  </view>
+
+  <!-- 本月统计 -->
+  <view class="month-stats card">
+    <view class="stats-title">本月统计</view>
+    <view class="stats-grid">
+      <view class="stats-item">
+        <text class="stats-label">总收入</text>
+        <text class="stats-value income">+{{monthIncome}}</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-label">总支出</text>
+        <text class="stats-value expense">-{{monthExpense}}</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-label">结余</text>
+        <text class="stats-value balance">{{balance}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="menu-list">
+    <view class="menu-item" bindtap="goToAllRecords">
+      <view class="menu-left">
+        <text class="menu-icon">📋</text>
+        <text class="menu-text">全部账单</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="clearAllData">
+      <view class="menu-left">
+        <text class="menu-icon">🗑️</text>
+        <text class="menu-text">清空所有数据</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="showAbout">
+      <view class="menu-left">
+        <text class="menu-icon">ℹ️</text>
+        <text class="menu-text">关于小程序</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+</view>
+
+<!-- 全部账单弹窗 -->
+<view class="modal" wx:if="{{showAllRecords}}" catchtap="hideAllRecords">
+  <view class="modal-content records-modal" catchtap="stopPropagation">
+    <view class="modal-title">全部账单</view>
+    <scroll-view class="records-scroll" scroll-y>
+      <view class="record-item" wx:for="{{allRecords}}" wx:key="id">
+        <view class="record-left">
+          <view class="record-category">{{item.category}}</view>
+          <view class="record-time">{{item.date}} {{item.time}}</view>
+        </view>
+        <view class="record-right">
+          <view class="record-amount {{item.type === 'income' ? 'income' : 'expense'}}">
+            {{item.type === 'income' ? '+' : '-'}}{{item.amount}}
+          </view>
+          <view class="record-note" wx:if="{{item.note}}">{{item.note}}</view>
+        </view>
+      </view>
+      <view class="empty-tip" wx:if="{{allRecords.length === 0}}">暂无账单记录</view>
+    </scroll-view>
+    <view class="modal-close" bindtap="hideAllRecords">关闭</view>
+  </view>
+</view>

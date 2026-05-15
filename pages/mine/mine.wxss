@@ -1,0 +1,231 @@
+/* pages/mine/mine.wxss */
+.container {
+  padding-bottom: 120rpx;
+}
+
+/* 用户卡片 */
+.user-card {
+  margin: 30rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50rpx 30rpx;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  margin-bottom: 20rpx;
+}
+
+.user-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+/* 本月统计 */
+.month-stats {
+  margin: 0 20rpx 30rpx;
+}
+
+.stats-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 30rpx;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stats-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-label {
+  font-size: 28rpx;
+  color: #999999;
+  margin-bottom: 15rpx;
+}
+
+.stats-value {
+  font-size: 40rpx;
+  font-weight: bold;
+}
+
+.stats-value.income {
+  color: #27ae60;
+}
+
+.stats-value.expense {
+  color: #e74c3c;
+}
+
+.stats-value.balance {
+  color: #3498db;
+}
+
+/* 功能列表 */
+.menu-list {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  margin: 0 20rpx;
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 35rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+
+.menu-text {
+  font-size: 32rpx;
+  color: #333333;
+}
+
+.menu-arrow {
+  font-size: 48rpx;
+  color: #cccccc;
+  font-weight: 300;
+}
+
+/* 弹窗 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 600rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+}
+
+.records-modal {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.records-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.record-category {
+  font-size: 30rpx;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.record-time {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.record-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.record-amount {
+  font-size: 34rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.record-amount.income {
+  color: #27ae60;
+}
+
+.record-amount.expense {
+  color: #e74c3c;
+}
+
+.record-note {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.empty-tip {
+  text-align: center;
+  padding: 80rpx 0;
+  color: #999999;
+  font-size: 28rpx;
+}
+
+.modal-close {
+  margin-top: 30rpx;
+  height: 80rpx;
+  background-color: #27ae60;
+  color: #ffffff;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
