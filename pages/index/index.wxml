@@ -1,6 +1,26 @@
-<!--pages/index/index.wxml-->
+<view class="top-navbar" style="height: {{navBarMetrics.navBarHeight}}px; padding-top: {{navBarMetrics.statusBarHeight}}px;">
+  <view class="top-navbar__inner" style="height: {{navBarMetrics.titleBarHeight}}px; padding-left: {{navBarMetrics.leftPadding}}px; padding-right: {{navBarMetrics.rightPadding}}px;">
+    <view class="top-navbar__brand" style="max-width: {{navBarMetrics.contentWidth}}px;">
+      <text class="top-navbar__title">鱼籽记账</text>
+    </view>
+  </view>
+</view>
+
+<view class="page-body">
 <view class="container">
-  <!-- 顶部统计卡片 -->
+  <view class="daily-card">
+    <view class="daily-top">
+      <view class="daily-info">
+        <text class="daily-time">{{currentTime}}</text>
+      </view>
+      <view class="weather-pill" bindtap="showWeatherDebug">{{weatherText}}</view>
+    </view>
+    <view class="daily-mood-wrap">
+      <text class="daily-mood">{{animatedMoodText}}</text>
+      <text class="daily-mood-cursor">|</text>
+    </view>
+  </view>
+
   <view class="stats-card card">
     <view class="stats-row">
       <view class="stats-item">
@@ -24,7 +44,6 @@
     </view>
   </view>
 
-  <!-- 记账按钮 -->
   <view class="action-buttons">
     <view class="action-btn income-btn" bindtap="showIncomeModal">
       <text class="action-icon">+</text>
@@ -36,7 +55,6 @@
     </view>
   </view>
 
-  <!-- 最近记录 -->
   <view class="recent-records">
     <view class="section-header">
       <view class="section-title">最近记录</view>
@@ -45,33 +63,73 @@
         <text class="month-arrow">▼</text>
       </view>
     </view>
-    <view class="records-list" wx:if="{{recentRecords.length > 0}}">
-      <view class="record-item" wx:for="{{recentRecords}}" wx:key="id">
-        <view
-          class="record-main {{currentSwipeId === item.id ? 'swiped' : ''}}"
-          bindtouchstart="onTouchStart"
-          bindtouchmove="onTouchMove"
-          bindtouchend="onTouchEnd"
-          data-id="{{item.id}}">
-          <view class="record-left">
-            <view class="record-category">{{item.category}}</view>
-            <view class="record-time">{{item.time}}</view>
-          </view>
-          <view class="record-right">
-            <view class="record-amount {{item.type === 'income' ? 'income' : 'expense'}}">
-              {{item.type === 'income' ? '+' : '-'}}{{item.amount}}
-            </view>
-            <view class="record-note" wx:if="{{item.note}}">{{item.note}}</view>
-          </view>
+
+    <view class="records-list" wx:if="{{recentGroups.length > 0}}">
+      <view class="record-group" wx:for="{{recentGroups}}" wx:key="date">
+        <view class="group-header">
+          <view class="group-date">{{item.title}}</view>
+          <view class="group-summary">{{item.summaryText}}</view>
         </view>
-        <view class="record-delete" bindtap="confirmDelete" data-id="{{item.id}}">删除</view>
+
+        <view class="record-item" wx:for="{{item.records}}" wx:key="id">
+          <view
+            class="record-main {{currentSwipeId === item.idText ? 'swiped' : ''}}"
+            bindtouchstart="onTouchStart"
+            bindtouchmove="onTouchMove"
+            bindtouchend="onTouchEnd"
+            data-id="{{item.idText}}">
+            <view class="record-left">
+              <view class="record-badge {{item.type === 'income' ? 'income-badge' : 'expense-badge'}}">
+                <text class="record-badge-icon" wx:if="{{item.hasIcon}}">{{item.iconText}}</text>
+                <text class="record-badge-text" wx:else>{{item.category}}</text>
+              </view>
+              <view class="record-content">
+                <view class="record-title">{{item.titleText}}</view>
+                <view class="record-detail">{{item.detailText}}</view>
+              </view>
+            </view>
+            <view class="record-right">
+              <view class="record-amount {{item.type === 'income' ? 'income' : 'expense'}}">{{item.amountText}}</view>
+            </view>
+          </view>
+          <view class="record-delete" bindtap="confirmDelete" data-id="{{item.idText}}">删除</view>
+        </view>
       </view>
     </view>
-    <view class="empty-tip" wx:else>暂无记录，快去记一笔吧~</view>
+
+    <view class="empty-tip" wx:else>暂无记录，去记一笔吧。</view>
+  </view>
+</view>
+</view>
+
+<view class="modal" wx:if="{{showAuthModal}}" catchtap="hideAuthModal">
+  <view class="modal-content auth-content" catchtap="stopPropagation">
+    <view class="modal-title">授权微信信息</view>
+    <view class="auth-desc">完成头像和昵称授权后，才可以继续记账。</view>
+
+    <button class="avatar-button" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image class="auth-avatar-image" wx:if="{{authAvatarUrl}}" src="{{authAvatarUrl}}" mode="aspectFill" />
+      <view class="auth-avatar-placeholder" wx:else>选择头像</view>
+    </button>
+
+    <view class="form-item">
+      <text class="form-label">微信昵称</text>
+      <input
+        class="form-input"
+        type="nickname"
+        placeholder="请输入微信昵称"
+        value="{{authNickName}}"
+        bindinput="onNickNameInput"
+        bindblur="onNickNameInput" />
+    </view>
+
+    <view class="modal-buttons">
+      <view class="modal-btn cancel-btn" bindtap="hideAuthModal">取消</view>
+      <view class="modal-btn confirm-btn" bindtap="confirmUserInfo">授权并继续</view>
+    </view>
   </view>
 </view>
 
-<!-- 月份选择器弹窗 -->
 <view class="modal" wx:if="{{showMonthPicker}}" catchtap="hideMonthPicker">
   <view class="modal-content month-picker-content" catchtap="stopPropagation">
     <view class="month-picker-header">
@@ -85,39 +143,36 @@
   </view>
 </view>
 
-<!-- 记账弹窗 -->
 <view class="modal" wx:if="{{showModal}}" catchtap="hideModal">
   <view class="modal-content" catchtap="stopPropagation">
     <view class="modal-title">{{modalType === 'income' ? '记收入' : '记支出'}}</view>
 
-    <!-- 金额输入 -->
     <view class="form-item">
       <text class="form-label">金额</text>
       <input class="form-input" type="digit" placeholder="请输入金额" value="{{amount}}" bindinput="onAmountInput" />
     </view>
 
-    <!-- 分类选择 -->
     <view class="form-item">
       <text class="form-label">分类</text>
-      <view class="category-list">
-        <view
-          class="category-tag {{selectedCategory === item ? 'active' : ''}}"
-          wx:for="{{categories}}"
-          wx:key="index"
-          bindtap="selectCategory"
-          data-category="{{item}}">
-          {{item}}
+      <scroll-view class="category-scroll" scroll-y enhanced show-scrollbar="false">
+        <view class="category-list">
+          <view
+            class="category-tag {{selectedCategory === item ? 'active' : ''}}"
+            wx:for="{{categories}}"
+            wx:key="index"
+            bindtap="selectCategory"
+            data-category="{{item}}">
+            {{item}}
+          </view>
         </view>
-      </view>
+      </scroll-view>
     </view>
 
-    <!-- 备注输入 -->
     <view class="form-item">
       <text class="form-label">备注</text>
-      <input class="form-input" placeholder="请输入备注（可选）" value="{{note}}" bindinput="onNoteInput" />
+      <input class="form-input" placeholder="可选，补充说明" value="{{note}}" bindinput="onNoteInput" />
     </view>
 
-    <!-- 按钮 -->
     <view class="modal-buttons">
       <view class="modal-btn cancel-btn" bindtap="hideModal">取消</view>
       <view class="modal-btn confirm-btn" bindtap="saveRecord">确定</view>

@@ -1,0 +1,161 @@
+<view class="top-navbar" style="height: {{navBarMetrics.navBarHeight}}px; padding-top: {{navBarMetrics.statusBarHeight}}px;">
+  <view class="top-navbar__inner" style="height: {{navBarMetrics.titleBarHeight}}px; padding-left: {{navBarMetrics.leftPadding}}px; padding-right: {{navBarMetrics.rightPadding}}px;">
+    <view class="top-navbar__brand" style="max-width: {{navBarMetrics.contentWidth}}px;">
+      <text class="top-navbar__title">鱼籽记账</text>
+    </view>
+  </view>
+</view>
+
+<view class="page-body">
+<view class="ai-page">
+  <view class="ai-layout">
+    <view class="feature-list">
+      <view
+        class="feature-card"
+        wx:for="{{features}}"
+        wx:key="type"
+        data-type="{{item.type}}"
+        bindtap="openFeature">
+        <view class="feature-icon">{{item.icon}}</view>
+        <view class="feature-body">
+          <view class="feature-title">{{item.title}}</view>
+          <view class="feature-desc">{{item.desc}}</view>
+        </view>
+        <view class="feature-arrow">›</view>
+      </view>
+    </view>
+
+    <view class="cloned-panel">
+      <view class="panel-title">复刻声音</view>
+      <view class="panel-subtitle" wx:if="{{currentSpeakerId}}">
+        当前微信号固定绑定音色 {{currentSpeakerIndex || 1}}：{{currentSpeakerId}}
+      </view>
+
+      <view wx:if="{{clonedVoices.length > 0}}">
+        <view class="voice-item" wx:for="{{clonedVoices}}" wx:key="id">
+          <view
+            class="voice-main {{currentVoiceSwipeId === item.id ? 'swiped' : ''}}"
+            data-id="{{item.id}}"
+            bindtouchstart="onVoiceTouchStart"
+            bindtouchmove="onVoiceTouchMove">
+            <view class="voice-name">{{item.name}}</view>
+            <view class="voice-meta">{{item.createdAt}}</view>
+            <view class="voice-meta" wx:if="{{item.speakerId}}">音色 ID：{{item.speakerId}}</view>
+            <view
+              wx:if="{{item.audioUrl}}"
+              class="voice-play {{playingVoiceId === item.id ? 'playing' : ''}}"
+              data-id="{{item.id}}"
+              data-url="{{item.audioUrl}}"
+              data-local-url="{{item.localAudioPath}}"
+              bindtap="playClonedVoice">
+              {{loadingVoiceId === item.id ? '加载中' : (playingVoiceId === item.id ? '停止播放' : '播放音频')}}
+            </view>
+            <view class="voice-meta" wx:else>音频链接未返回</view>
+          </view>
+          <view class="voice-delete" data-id="{{item.id}}" bindtap="confirmDeleteVoice">删除</view>
+        </view>
+      </view>
+
+      <view class="empty-tip" wx:else>暂无复刻声音</view>
+    </view>
+  </view>
+</view>
+</view>
+
+<view class="modal" wx:if="{{showAuthModal}}" catchtap="hideAuthModal">
+  <view class="modal-content auth-content" catchtap="stopPropagation">
+    <view class="modal-title">授权微信信息</view>
+    <view class="auth-desc">点击 AI 声音复刻前，需要先授权微信头像和昵称，并绑定一个固定音色槽位。</view>
+
+    <button class="avatar-button" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image class="auth-avatar-image" wx:if="{{authAvatarUrl}}" src="{{authAvatarUrl}}" mode="aspectFill" />
+      <view class="auth-avatar-placeholder" wx:else>选择头像</view>
+    </button>
+
+    <view class="form-item">
+      <view class="form-label">微信昵称</view>
+      <input
+        class="form-input"
+        type="nickname"
+        placeholder="请输入微信昵称"
+        value="{{authNickName}}"
+        bindinput="onNickNameInput"
+        bindblur="onNickNameInput" />
+    </view>
+
+    <view class="modal-actions">
+      <button class="secondary-button action-button" bindtap="hideAuthModal">取消</button>
+      <button class="primary-button action-button" bindtap="confirmUserInfo">授权并继续</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal" wx:if="{{activeModal}}" catchtap="closeModal">
+  <view class="modal-content {{activeModal === 'voice' ? 'voice-modal' : ''}}" catchtap="stopPropagation">
+    <view class="modal-header">
+      <view class="modal-title">{{modalTitle}}</view>
+      <view class="modal-close" bindtap="closeModal">×</view>
+    </view>
+
+    <view wx:if="{{activeModal === 'chat'}}">
+      <scroll-view class="chat-list" scroll-y>
+        <view class="chat-message {{item.role}}" wx:for="{{chatMessages}}" wx:key="index">
+          <view class="chat-bubble">{{item.content}}</view>
+        </view>
+      </scroll-view>
+      <view class="inline-form">
+        <input class="form-input" placeholder="请输入问题" value="{{chatInput}}" bindinput="onChatInput" confirm-type="send" bindconfirm="sendChat" />
+        <button class="primary-button small" loading="{{isAiLoading}}" bindtap="sendChat">发送</button>
+      </view>
+    </view>
+
+    <view wx:elif="{{activeModal === 'copy'}}">
+      <view class="inline-form">
+        <input class="form-input" placeholder="粘贴抖音分享文案或链接" value="{{douyinLink}}" bindinput="onDouyinLinkInput" />
+        <button class="primary-button small" loading="{{isAiLoading}}" bindtap="extractCopy">提取文案</button>
+      </view>
+      <textarea class="result-box" value="{{extractResult}}" placeholder="提取结果会显示在这里" disabled />
+    </view>
+
+    <view wx:elif="{{activeModal === 'compress'}}">
+      <view class="inline-form">
+        <button class="secondary-button" bindtap="chooseImage">上传图片</button>
+        <button class="primary-button small" loading="{{isAiLoading}}" disabled="{{!imagePath}}" bindtap="compressImage">压缩</button>
+      </view>
+      <image class="preview-image" wx:if="{{imagePath}}" src="{{imagePath}}" mode="aspectFit" />
+      <view class="result-path" wx:if="{{compressedImagePath}}">压缩后图片：{{compressedImagePath}}</view>
+      <image class="preview-image" wx:if="{{compressedImagePath}}" src="{{compressedImagePath}}" mode="aspectFit" />
+    </view>
+
+    <view wx:elif="{{activeModal === 'voice'}}">
+      <view class="speaker-pill" wx:if="{{currentSpeakerId}}">
+        当前已绑定音色 {{currentSpeakerIndex || 1}}：{{currentSpeakerId}}
+      </view>
+
+      <view class="upload-title">上传音频</view>
+      <view class="audio-upload" bindtap="chooseVoiceAudio">
+        <view class="upload-icon">↑</view>
+        <view class="upload-main">{{voiceAudioFileName || '点击上传音频文件'}}</view>
+        <view class="upload-sub">支持 MP3、WAV、M4A，建议 15 秒内，语音清晰。</view>
+      </view>
+
+      <view class="form-item">
+        <view class="form-label">语音名称</view>
+        <input class="form-input voice-name-input" placeholder="请输入名称" value="{{voiceName}}" bindinput="onVoiceNameInput" />
+      </view>
+
+      <view class="modal-actions">
+        <button class="secondary-button action-button" bindtap="closeModal">取消</button>
+        <button class="primary-button action-button" loading="{{isAiLoading}}" disabled="{{!voiceCloneReady || isAiLoading}}" bindtap="startVoiceClone">开始复刻</button>
+      </view>
+    </view>
+
+    <view wx:elif="{{activeModal === 'subtitle'}}">
+      <view class="inline-form">
+        <input class="form-input" placeholder="输入关键词" value="{{subtitleKeyword}}" bindinput="onSubtitleKeywordInput" />
+        <button class="primary-button small" loading="{{isAiLoading}}" bindtap="generateSubtitle">生成字幕</button>
+      </view>
+      <textarea class="result-box" value="{{subtitleResult}}" placeholder="字幕结果会显示在这里" disabled />
+    </view>
+  </view>
+</view>

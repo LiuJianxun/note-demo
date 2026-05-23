@@ -1,12 +1,42 @@
-<!--pages/mine/mine.wxml-->
+<view class="top-navbar" style="height: {{navBarMetrics.navBarHeight}}px; padding-top: {{navBarMetrics.statusBarHeight}}px;">
+  <view class="top-navbar__inner" style="height: {{navBarMetrics.titleBarHeight}}px; padding-left: {{navBarMetrics.leftPadding}}px; padding-right: {{navBarMetrics.rightPadding}}px;">
+    <view class="top-navbar__brand" style="max-width: {{navBarMetrics.contentWidth}}px;">
+      <text class="top-navbar__title">鱼籽记账</text>
+    </view>
+  </view>
+</view>
+
+<view class="page-body">
 <view class="container">
-  <!-- 顶部用户信息 -->
-  <view class="user-card card">
-    <view class="user-avatar">👤</view>
-    <view class="user-name">记账用户</view>
+  <view class="profile-hero">
+    <view class="profile-top">
+      <view class="profile-user">
+        <image class="user-avatar" wx:if="{{userInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+        <view class="user-avatar user-avatar-placeholder" wx:else>记</view>
+        <view class="user-name">{{userInfo && userInfo.nickName ? userInfo.nickName : '记账用户'}}</view>
+      </view>
+
+      <view class="checkin-btn {{checkedInToday ? 'checked' : ''}}" bindtap="handleCheckIn">
+        {{checkedInToday ? '已打卡' : '打卡'}}
+      </view>
+    </view>
+
+    <view class="hero-stats">
+      <view class="hero-stat">
+        <text class="hero-stat-value">{{consecutiveCheckInDays}}</text>
+        <text class="hero-stat-label">已连续打卡</text>
+      </view>
+      <view class="hero-stat">
+        <text class="hero-stat-value">{{recordDays}}</text>
+        <text class="hero-stat-label">记账总天数</text>
+      </view>
+      <view class="hero-stat">
+        <text class="hero-stat-value">{{totalRecordCount}}</text>
+        <text class="hero-stat-label">记账总笔数</text>
+      </view>
+    </view>
   </view>
 
-  <!-- 本月统计 -->
   <view class="month-stats card">
     <view class="stats-title">本月统计</view>
     <view class="stats-grid">
@@ -25,19 +55,34 @@
     </view>
   </view>
 
-  <!-- 功能列表 -->
   <view class="menu-list">
     <view class="menu-item" bindtap="goToAllRecords">
       <view class="menu-left">
-        <text class="menu-icon">📋</text>
+        <text class="menu-icon">账</text>
         <text class="menu-text">全部账单</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="exportBackup">
+      <view class="menu-left">
+        <text class="menu-icon">导</text>
+        <text class="menu-text">导出数据备份</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="importBackup">
+      <view class="menu-left">
+        <text class="menu-icon">入</text>
+        <text class="menu-text">导入数据备份</text>
       </view>
       <text class="menu-arrow">›</text>
     </view>
 
     <view class="menu-item" bindtap="clearAllData">
       <view class="menu-left">
-        <text class="menu-icon">🗑️</text>
+        <text class="menu-icon">清</text>
         <text class="menu-text">清空所有数据</text>
       </view>
       <text class="menu-arrow">›</text>
@@ -45,15 +90,15 @@
 
     <view class="menu-item" bindtap="showAbout">
       <view class="menu-left">
-        <text class="menu-icon">ℹ️</text>
+        <text class="menu-icon">关</text>
         <text class="menu-text">关于小程序</text>
       </view>
       <text class="menu-arrow">›</text>
     </view>
   </view>
 </view>
+</view>
 
-<!-- 全部账单弹窗 -->
 <view class="modal" wx:if="{{showAllRecords}}" catchtap="hideAllRecords">
   <view class="modal-content records-modal" catchtap="stopPropagation">
     <view class="modal-title">全部账单</view>

@@ -3,42 +3,115 @@
   padding-bottom: 120rpx;
 }
 
-/* 用户卡片 */
-.user-card {
-  margin: 30rpx 20rpx;
+.profile-hero {
+  margin: 28rpx 20rpx 24rpx;
+  padding: 28rpx 28rpx 20rpx;
+  background: linear-gradient(135deg, #f6c93a 0%, #ffd859 46%, #ffe98a 100%);
+  border-radius: 28rpx;
+  box-shadow: 0 18rpx 42rpx rgba(214, 165, 20, 0.18);
+}
+
+.profile-top {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  padding: 50rpx 30rpx;
+  gap: 20rpx;
+}
+
+.profile-user {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .user-avatar {
-  width: 120rpx;
-  height: 120rpx;
-  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  width: 116rpx;
+  height: 116rpx;
   border-radius: 50%;
+  margin-right: 22rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.88);
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.user-avatar-placeholder {
+  background: rgba(255, 255, 255, 0.88);
+  color: #8a5a00;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 60rpx;
-  margin-bottom: 20rpx;
+  font-size: 42rpx;
+  font-weight: 700;
 }
 
 .user-name {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333333;
+  flex: 1;
+  min-width: 0;
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #1f2328;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* 本月统计 */
+.checkin-btn {
+  flex-shrink: 0;
+  min-width: 154rpx;
+  height: 76rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #1f2328;
+  font-size: 30rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(255, 255, 255, 0.25);
+}
+
+.checkin-btn.checked {
+  color: #4b5563;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 42rpx;
+}
+
+.hero-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-stat-value {
+  font-size: 64rpx;
+  font-weight: 700;
+  color: #1f2328;
+  line-height: 1;
+}
+
+.hero-stat-label {
+  margin-top: 14rpx;
+  font-size: 28rpx;
+  color: rgba(31, 35, 40, 0.72);
+}
+
 .month-stats {
   margin: 0 20rpx 30rpx;
+  background: linear-gradient(180deg, #fffef8 0%, #fff4d0 100%);
+  border: 1rpx solid rgba(234, 198, 88, 0.25);
+  box-shadow: 0 16rpx 34rpx rgba(214, 165, 20, 0.08);
 }
 
 .stats-title {
   font-size: 32rpx;
-  font-weight: bold;
-  color: #333333;
+  font-weight: 700;
+  color: #6f5414;
   margin-bottom: 30rpx;
 }
 
@@ -56,13 +129,13 @@
 
 .stats-label {
   font-size: 28rpx;
-  color: #999999;
+  color: #8f7b4a;
   margin-bottom: 15rpx;
 }
 
 .stats-value {
   font-size: 40rpx;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .stats-value.income {
@@ -74,15 +147,15 @@
 }
 
 .stats-value.balance {
-  color: #3498db;
+  color: #8a5a00;
 }
 
-/* 功能列表 */
 .menu-list {
   background-color: #ffffff;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   margin: 0 20rpx;
   overflow: hidden;
+  box-shadow: 0 10rpx 24rpx rgba(0, 0, 0, 0.06);
 }
 
 .menu-item {
@@ -103,8 +176,17 @@
 }
 
 .menu-icon {
-  font-size: 40rpx;
+  width: 56rpx;
+  height: 56rpx;
   margin-right: 20rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #f6d554 0%, #ffe991 100%);
+  color: #8a5a00;
+  font-size: 26rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-text {
@@ -113,18 +195,14 @@
 }
 
 .menu-arrow {
-  font-size: 48rpx;
+  font-size: 42rpx;
   color: #cccccc;
   font-weight: 300;
 }
 
-/* 弹窗 */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
@@ -135,7 +213,7 @@
 .modal-content {
   width: 600rpx;
   background-color: #ffffff;
-  border-radius: 16rpx;
+  border-radius: 24rpx;
   padding: 40rpx;
 }
 
@@ -147,7 +225,7 @@
 
 .modal-title {
   font-size: 36rpx;
-  font-weight: bold;
+  font-weight: 700;
   color: #333333;
   text-align: center;
   margin-bottom: 30rpx;
@@ -194,7 +272,7 @@
 
 .record-amount {
   font-size: 34rpx;
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 8rpx;
 }
 
@@ -220,12 +298,13 @@
 
 .modal-close {
   margin-top: 30rpx;
-  height: 80rpx;
+  height: 84rpx;
   background-color: #27ae60;
   color: #ffffff;
-  border-radius: 8rpx;
+  border-radius: 14rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 32rpx;
+  font-weight: 600;
 }
